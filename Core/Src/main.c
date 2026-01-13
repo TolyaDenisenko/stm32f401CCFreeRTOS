@@ -101,7 +101,6 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM10_Init();
   MX_TIM2_Init();
-  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -229,7 +228,7 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 83;
+  htim2.Init.Prescaler = 89;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 999;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -248,7 +247,7 @@ static void MX_TIM2_Init(void)
   sConfigOC.Pulse = 0;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
-  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
   {
     Error_Handler();
   }
@@ -256,6 +255,8 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 2 */
   HAL_TIM_MspPostInit(&htim2);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+
 
 }
 
@@ -277,7 +278,7 @@ static void MX_TIM10_Init(void)
   htim10.Instance = TIM10;
   htim10.Init.Prescaler = 41999;
   htim10.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim10.Init.Period = 4095;
+  htim10.Init.Period = 999;
   htim10.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim10.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
   if (HAL_TIM_Base_Init(&htim10) != HAL_OK)
@@ -319,6 +320,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LED1_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pin : UserButton_Pin */
+  GPIO_InitStruct.Pin = UserButton_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(UserButton_GPIO_Port, &GPIO_InitStruct);
+
   /*Configure GPIO pins : LED3_Pin LED2_Pin */
   GPIO_InitStruct.Pin = LED3_Pin|LED2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -328,7 +335,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN MX_GPIO_Init_2 */
   /* Configure PA0 as TIM2_CH1 */
-  GPIO_InitStruct.Pin = GPIO_PIN_0;
+  GPIO_InitStruct.Pin = GPIO_PIN_1;
   GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
@@ -393,15 +400,23 @@ void StartToogleTask03(void const * argument)
 {
   /* USER CODE BEGIN StartToogleTask03 */
   /* Infinite loop */
-	uint32_t duty = 0;
-	  while (1)
+
+	  for(;;)
 	  {
-		  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, duty);
-	    duty= duty+10;
-	    if(duty>=4095){
-	    	duty=0;
-	    }// от 0 до 999
-	    osDelay(100);
+
+		  if(HAL_GPIO_ReadPin(UserButton_GPIO_Port, UserButton_Pin)==SET){
+			 for(uint16_t i =0; i<=999; i+=20){
+				 __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, i);
+				 osDelay(100);
+			 }
+
+		  }
+		  else{
+			  __HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 1);
+			  		  osDelay(100);
+		  }
+
+
 	  }
   /* USER CODE END StartToogleTask03 */
 }
