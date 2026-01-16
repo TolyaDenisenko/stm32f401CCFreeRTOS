@@ -1,6 +1,6 @@
 ################################################################################
 # Automatically-generated file. Do not edit!
-# Toolchain: GNU Tools for STM32 (12.3.rel1)
+# Toolchain: GNU Tools for STM32 (13.3.rel1)
 ################################################################################
 
 -include ../makefile.init
@@ -68,8 +68,8 @@ all: main-build
 main-build: testProject.elf secondary-outputs
 
 # Tool invocations
-testProject.elf testProject.map: $(OBJS) $(USER_OBJS) C:\Users\ANATOLY\STM32CubeIDE\workspace_1.16.1\testProject\STM32F401CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "testProject.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ANATOLY\STM32CubeIDE\workspace_1.16.1\testProject\STM32F401CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="testProject.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+testProject.elf testProject.map: $(OBJS) $(USER_OBJS) C:\Users\ANATOLY\stm32f401CCFreeRTOS\STM32F401CEUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "testProject.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"C:\Users\ANATOLY\stm32f401CCFreeRTOS\STM32F401CEUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="testProject.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

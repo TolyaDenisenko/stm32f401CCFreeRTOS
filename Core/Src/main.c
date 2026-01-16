@@ -228,7 +228,7 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 1 */
   htim2.Instance = TIM2;
-  htim2.Init.Prescaler = 83;
+  htim2.Init.Prescaler = 89;
   htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
   htim2.Init.Period = 999;
   htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
@@ -255,6 +255,8 @@ static void MX_TIM2_Init(void)
 
   /* USER CODE END TIM2_Init 2 */
   HAL_TIM_MspPostInit(&htim2);
+  HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2);
+
 
   HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_2); // ← обязательно!
 
@@ -400,6 +402,7 @@ void StartToogleTask03(void const * argument)
   /* USER CODE BEGIN StartToogleTask03 */
   /* Infinite loop */
 
+
 	for(;;)
 	  {
 		if(HAL_GPIO_ReadPin(UserButton_GPIO_Port, UserButton_Pin)==SET){
@@ -412,10 +415,6 @@ void StartToogleTask03(void const * argument)
 		else{
 			__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_2, 1);
 		}
-
-
-
-
 
   /* USER CODE END StartToogleTask03 */
 }
